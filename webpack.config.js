@@ -5,8 +5,8 @@ module.exports = (_, argv) => ({
   output: {
     publicPath:
       argv.mode === "development"
-        ? "http://localhost:3000/"
-        : "https://prod-test-consumer.vercel.app/",
+        ? "http://localhost:3001/"
+        : "https://prod-test-header.vercel.app/",
   },
 
   resolve: {
@@ -14,7 +14,7 @@ module.exports = (_, argv) => ({
   },
 
   devServer: {
-    port: 3000,
+    port: 3001,
   },
 
   module: {
@@ -35,12 +35,13 @@ module.exports = (_, argv) => ({
 
   plugins: [
     new ModuleFederationPlugin({
-      name: "consumer",
+      name: "children",
       filename: "remoteEntry.js",
-      remotes: {
-        header: "header@https://prod-test-header.vercel.app/remoteEntry.js",
+      remotes: {},
+      exposes: {
+        "./Header": "./src/Header",
+        "./Footer": "./src/Footer",
       },
-      exposes: {},
       shared: require("./package.json").dependencies,
     }),
     new HtmlWebPackPlugin({
